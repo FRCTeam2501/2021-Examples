@@ -1,7 +1,6 @@
 # Install stuff
-https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up/
-
-https://pimylifeup.com/raspberry-pi-visual-studio-code/
+1. https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up/
+2. https://pimylifeup.com/raspberry-pi-visual-studio-code/
  - Instead of installing via double click, need to do `sudo apt install ~/Downloads/[tab]`
 
 
@@ -27,12 +26,11 @@ https://pimylifeup.com/raspberry-pi-visual-studio-code/
 
 
 # Servo control stuff
-https://github.com/vanvught/rpidmx512/tree/master/lib-pca9685
-
-https://www.adafruit.com/product/2327
+- https://github.com/vanvught/rpidmx512/tree/master/lib-pca9685
+- https://www.adafruit.com/product/2327
 
 
 # Gamepad stuff
-https://github.com/wgois/OIS
-
-https://wgois.github.io/OIS/doxygen/html/class_o_i_s_1_1_joy_stick.html
+- https://github.com/wgois/OIS
+- https://wgois.github.io/OIS/doxygen/html/class_o_i_s_1_1_joy_stick.html
+- https://wgois.github.io/OIS/doxygen/html/hierarchy.html
