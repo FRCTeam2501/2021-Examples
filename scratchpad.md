@@ -1,7 +1,9 @@
 # Install stuff
 https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up/
+
 https://pimylifeup.com/raspberry-pi-visual-studio-code/
  - Instead of installing via double click, need to do `sudo apt install ~/Downloads/[tab]`
+
 
 ## Pi:
  - SSH+X11: Very easy to setup (https://www.raspberrypi.org/documentation/remote-access/ssh/)
@@ -27,6 +29,7 @@ https://pimylifeup.com/raspberry-pi-visual-studio-code/
 # Servo control stuff
 https://github.com/vanvught/rpidmx512/tree/master/lib-pca9685
 https://www.adafruit.com/product/2327
+
 
 # Gamepad stuff
 https://github.com/wgois/OIS
