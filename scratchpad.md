@@ -28,9 +28,11 @@ https://pimylifeup.com/raspberry-pi-visual-studio-code/
 
 # Servo control stuff
 https://github.com/vanvught/rpidmx512/tree/master/lib-pca9685
+
 https://www.adafruit.com/product/2327
 
 
 # Gamepad stuff
 https://github.com/wgois/OIS
+
 https://wgois.github.io/OIS/doxygen/html/class_o_i_s_1_1_joy_stick.html
