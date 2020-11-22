@@ -34,3 +34,5 @@
 - https://github.com/wgois/OIS
 - https://wgois.github.io/OIS/doxygen/html/class_o_i_s_1_1_joy_stick.html
 - https://wgois.github.io/OIS/doxygen/html/hierarchy.html
+- https://github.com/drewnoakes/joystick *
+- http://gainput.johanneskuhlmann.de/api/
