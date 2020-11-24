@@ -15,9 +15,9 @@ for event in gamepad.read_loop():
 		# print(event)
 		code = ecodes.bytype[event.event.type][event.event.code]
 		if code == 'ABS_Y':
-			y = event.event.value / -32768
+			y = (event.event.value / -128) + 1.0
 		elif code == 'ABS_X':
-			x = event.event.value / 32768
+			x = (event.event.value / 128) - 1.0
 		
 		print(x, y)
 		if y >= 0.0:

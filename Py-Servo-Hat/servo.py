@@ -11,5 +11,5 @@ while True:
     kit.continuous_servo[0].throttle = -1
     time.sleep(5)
     print("0")
-    kit.continuous_servo[0].throttle = 0
+    kit.continuous_servo[1].throttle = 0
     time.sleep(5)
