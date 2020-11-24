@@ -10,15 +10,15 @@ int main() {
     std::cout << "Setup done.\n";
 
     while(true) {
-        softPwmWrite(0, 100);
-        std::cout << "ON\n";
-        delay(500);
+        softPwmWrite(0, 75);
+        std::cout << "75%\n";
+        delay(5000);
         softPwmWrite(0, 50);
-        std::cout << "HALF\n";
-        delay(500);
-        softPwmWrite(0, 0);
-        std::cout << "OFF\n";
-        delay(500);
+        std::cout << "50%\n";
+        delay(5000);
+        softPwmWrite(0, 25);
+        std::cout << "25%\n";
+        delay(5000);
     }
 
     return 0;
