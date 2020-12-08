@@ -3,11 +3,13 @@ from adafruit_servokit import ServoKit
 from evdev import InputDevice, categorize, ecodes, KeyEvent
 
 gamepad = InputDevice('/dev/input/event0')
-x = 0 # rotation
-y = 0 # forward/backwards
+
 kit = ServoKit(channels=16)
-# 0: left
-# 1: right
+
+y = 0
+x = 0
+left = 0
+right = 0
 
 def arcadeDrive(forward, rotation):
 	maxInput = math.copysign(max(abs(forward), abs(rotation)), forward)
@@ -27,6 +29,7 @@ def arcadeDrive(forward, rotation):
 			right = forward - rotation
 	return (left, right)
 
+
 for event in gamepad.read_loop():
 	if event.type == ecodes.EV_ABS:
 		event = categorize(event)
@@ -39,6 +42,7 @@ for event in gamepad.read_loop():
 		# print(x, y)
 		left, right = arcadeDrive(y, x)
 		print(left, right)
+		
 		kit.continuous_servo[0].throttle = left
 		kit.continuous_servo[1].throttle = right
 		kit.continuous_servo[2].throttle = left
