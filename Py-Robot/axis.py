@@ -1,4 +1,4 @@
-import time
+import time, math
 from adafruit_servokit import ServoKit
 from evdev import InputDevice, categorize, ecodes, KeyEvent
 
@@ -9,28 +9,37 @@ kit = ServoKit(channels=16)
 # 0: left
 # 1: right
 
+def arcadeDrive(forward, rotation):
+	maxInput = math.copysign(max(abs(forward), abs(rotation)), forward)
+	if forward >= 0.0:
+		if rotation >= 0.0:
+			left = maxInput
+			right = forward - rotation
+		else:
+			left = forward + rotation
+			right = maxInput
+	else:
+		if rotation >= 0.0:
+			left = forward + rotation
+			right = maxInput
+		else:
+			left = maxInput
+			right = forward - rotation
+	return (left, right)
+
 for event in gamepad.read_loop():
 	if event.type == ecodes.EV_ABS:
 		event = categorize(event)
-		# print(event)
 		code = ecodes.bytype[event.event.type][event.event.code]
-		if code == 'ABS_Y':
+		if code == 'ABS_Y': # Forward/Backwards
 			y = (event.event.value / -128) + 1.0
-		elif code == 'ABS_X':
+		elif code == 'ABS_X': # Rotation
 			x = (event.event.value / 128) - 1.0
 		
-		print(x, y)
-		if y >= 0.0:
-			if x >= 0.0:
-				kit.continuous_servo[0].throttle = max(x, y)
-				kit.continuous_servo[1].throttle = y - x
-			else:
-				kit.continuous_servo[0].throttle = y + x
-				kit.continuous_servo[1].throttle = max(x, y)
-		else:
-			if x >= 0.0:
-				kit.continuous_servo[0].throttle = y + x
-				kit.continuous_servo[1].throttle = max(x, y)
-			else:
-				kit.continuous_servo[0].throttle = max(x, y)
-				kit.continuous_servo[1].throttle = y - x
+		# print(x, y)
+		left, right = arcadeDrive(y, x)
+		print(left, right)
+		kit.continuous_servo[0].throttle = left
+		kit.continuous_servo[1].throttle = right
+		kit.continuous_servo[2].throttle = left
+		kit.continuous_servo[3].throttle = right
