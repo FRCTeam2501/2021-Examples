@@ -38,11 +38,12 @@ for event in gamepad.read_loop():
 			y = (event.event.value / -128) + 1.0
 		elif code == 'ABS_X': # Rotation
 			x = (event.event.value / 128) - 1.0
-		
+
 		# print(x, y)
+		x = x * -1
 		left, right = arcadeDrive(y, x)
 		print(left, right)
-		
+
 		kit.continuous_servo[0].throttle = left
 		kit.continuous_servo[1].throttle = right
 		kit.continuous_servo[2].throttle = left
