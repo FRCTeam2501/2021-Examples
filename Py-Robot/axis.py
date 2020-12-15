@@ -5,10 +5,10 @@ from evdev import InputDevice, categorize, ecodes, KeyEvent
 gamepad = InputDevice('/dev/input/event0')
 
 kit = ServoKit(channels=16)
-kit.continuous_servo[0].set_pulse_width_range(1000, 2100)
-kit.continuous_servo[1].set_pulse_width_range(1000, 2100)
-kit.continuous_servo[2].set_pulse_width_range(1000, 2100)
-kit.continuous_servo[3].set_pulse_width_range(1000, 2100)
+kit.continuous_servo[0].set_pulse_width_range(1050, 2050)
+kit.continuous_servo[1].set_pulse_width_range(1050, 2050)
+kit.continuous_servo[2].set_pulse_width_range(1050, 2050)
+kit.continuous_servo[3].set_pulse_width_range(1050, 2050)
 
 y = 0
 x = 0
