@@ -44,8 +44,8 @@ int main(int argc, char **argv) {
 	PCA9685Servo servo;
 
 	// MG90S Micro Servo
-	servo.SetLeftUs(700);
-	servo.SetRightUs(2400);
+	servo.SetLeftUs(1050);
+	servo.SetRightUs(2050);
 
 	servo.Dump();
 
@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
 
 	sleep(4);
 
-	for (;;) {
+	while (true) {
 		servo.SetAngle(CHANNEL(0), ANGLE(90));
 		servo.SetAngle(CHANNEL(1), ANGLE(0));
 		servo.SetAngle(CHANNEL(2), ANGLE(0));
@@ -69,7 +69,7 @@ int main(int argc, char **argv) {
 		puts("");
 		puts("Servo 0:90  Servo 1:0");
 		puts("Servo 2:0  Servo 3:0");
-		sleep(2);
+		sleep(5);
 		servo.SetAngle(CHANNEL(0), ANGLE(180));
 		servo.SetAngle(CHANNEL(1), ANGLE(180));
 		servo.SetAngle(CHANNEL(2), ANGLE(90));
@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
 		puts("");
 		puts("Servo 0:180 Servo 1:180");
 		puts("Servo 2:90  Servo 3:90");
-		sleep(2);
+		sleep(5);
 		servo.SetAngle(CHANNEL(0), ANGLE(0));
 		servo.SetAngle(CHANNEL(1), ANGLE(90));
 		servo.SetAngle(CHANNEL(2), ANGLE(180));
@@ -85,7 +85,7 @@ int main(int argc, char **argv) {
 		puts("");
 		puts("Servo 0:0   Servo 1:90");
 		puts("Servo 2:180  Servo 3:180");
-		sleep(2);
+		sleep(5);
 	}
 
 	return 0;
