@@ -31,4 +31,4 @@
 
 
 # Gamepad stuff
-- http://gainput.johanneskuhlmann.de/api/
+- To the kernel batman! https://www.kernel.org/doc/Documentation/input/joystick-api.txt
