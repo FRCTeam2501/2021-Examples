@@ -253,6 +253,8 @@ int main() {
 		if(isEnabled) {
 			double left, right;
 			arcadeDrive(stick->getAxis(GAMEPAD::AXES::LY), stick->getAxis(GAMEPAD::AXES::LX), left, right);
+			left *= -1.0;
+			right *= -1.0;
 
 			servo.SetAngle(CHANNEL(0), ANGLE(doubleToAngle(left)));
 			servo.SetAngle(CHANNEL(1), ANGLE(doubleToAngle(right)));
