@@ -210,6 +210,7 @@ int main() {
 
 	PCA9685Servo servo;
 	servo.SetLeftUs(1050);
+	servo.SetCenterUs(1550);
 	servo.SetRightUs(2050);
 
 
@@ -252,15 +253,20 @@ int main() {
 		// Deal with drive
 		if(isEnabled) {
 			double left, right;
-			arcadeDrive(stick->getAxis(GAMEPAD::AXES::LY), stick->getAxis(GAMEPAD::AXES::LX), left, right);
+			arcadeDrive(stick->getAxis(GAMEPAD::AXES::LY), stick->getAxis(GAMEPAD::AXES::LX) * -1.0, left, right);
 			left *= -1.0;
 			right *= -1.0;
 
-			servo.SetAngle(CHANNEL(0), ANGLE(doubleToAngle(left)));
-			servo.SetAngle(CHANNEL(1), ANGLE(doubleToAngle(right)));
-			servo.SetAngle(CHANNEL(2), ANGLE(doubleToAngle(left)));
-			servo.SetAngle(CHANNEL(3), ANGLE(doubleToAngle(right)));
+			uint8_t leftAngle, rightAngle;
+			leftAngle = doubleToAngle(left);
+			rightAngle = doubleToAngle(right);
+
+			servo.SetAngle(CHANNEL(0), ANGLE(leftAngle));
+			servo.SetAngle(CHANNEL(1), ANGLE(rightAngle));
+			servo.SetAngle(CHANNEL(2), ANGLE(leftAngle));
+			servo.SetAngle(CHANNEL(3), ANGLE(rightAngle));
 			std::cout << "left: " << left << ", right: " << right << "\n";
+			std::cout << "leftAngle: " << +leftAngle << ", rightAngle: " << +rightAngle << "\n";
 		}
 	}
 	return 0;
