@@ -165,11 +165,11 @@ class ServoHat {
 	uint8_t *angles;
 	bool enabled = false;
 
-	uint8_t doubleToAngle(double d) {
+	uint8_t DoubleToAngle(double d) {
 		return (d + 1) * 90.0;
 	}
 
-	void setInternal(uint8_t channel, uint8_t angle, bool record) {
+	void SetInternal(uint8_t channel, uint8_t angle, bool record) {
 		hat->SetAngle(channel, angle);
 		//std::cout << "set " << +channel << "," << +angle << "\n";
 
@@ -182,18 +182,18 @@ class ServoHat {
 	friend class SpeedController;
 	const static uint8_t MAX_CHANNELS = 16;
 
-	void set(uint8_t channel, double speed) {
+	void Set(uint8_t channel, double speed) {
 		if(!enabled || channel >= MAX_CHANNELS)
 			return;
 
-		setInternal(channel, doubleToAngle(speed), true);
+		SetInternal(channel, DoubleToAngle(speed), true);
 	}
 
-	void setAngle(uint8_t channel, uint8_t angle) {
+	void SetAngle(uint8_t channel, uint8_t angle) {
 		if(!enabled || channel >= MAX_CHANNELS)
 			return;
 
-		setInternal(channel, angle, true);
+		SetInternal(channel, angle, true);
 	}
 
  public:
@@ -219,27 +219,27 @@ class ServoHat {
 		}
 	}
 
-	void enable() {
+	void Enable() {
 		if(enabled)
 			return;
 
 		enabled = true;
 		for(uint8_t i = 0; i < 16; i++) {
-			setInternal(i, angles[i], false);
+			SetInternal(i, angles[i], false);
 		}
 	}
 
-	void disable() {
+	void Disable() {
 		if(!enabled)
 			return;
 
 		enabled = false;
 		for(uint8_t i = 0; i < 16; i++) {
-			setInternal(i, 90U, false);
+			SetInternal(i, 90U, false);
 		}
 	}
 
-	bool isEnabled() {
+	bool IsEnabled() {
 		return enabled;
 	}
 };
@@ -260,12 +260,12 @@ class SpeedController {
 		SpeedController::channel = channel;
 	}
 
-	void set(double speed) {
-		hat->set(channel, speed);
+	void Set(double speed) {
+		hat->Set(channel, speed);
 	}
 
-	void setAngle(uint8_t angle) {
-		hat->setAngle(channel, angle);
+	void SetAngle(uint8_t angle) {
+		hat->SetAngle(channel, angle);
 	}
 };
 
@@ -274,7 +274,7 @@ class DifferentialDrive {
 	SpeedController *lf, *lr, *rf, *rr;
 	bool invertLeft = false, invertRight = false;
 
-	double clamp(double val, double min, double max) {
+	double Clamp(double val, double min, double max) {
 		return std::min(std::max(val, min), max);
 	}
 
@@ -286,21 +286,21 @@ class DifferentialDrive {
 		DifferentialDrive::rr = rr;
 	}
 
-	void tankDrive(double left, double right) {
+	void TankDrive(double left, double right) {
 		if(invertLeft)
 			left *= -1.0;
 		if(invertRight)
 			right *= -1.0;
 
-		DifferentialDrive::lf->set(left);
-		DifferentialDrive::lr->set(left);
-		DifferentialDrive::rf->set(right);
-		DifferentialDrive::rr->set(right);
+		DifferentialDrive::lf->Set(left);
+		DifferentialDrive::lr->Set(left);
+		DifferentialDrive::rf->Set(right);
+		DifferentialDrive::rr->Set(right);
 	}
 
-	void arcadeDrive(double forward, double rotation) {
-		forward = clamp(forward, -1.0, 1.0);
-		rotation = clamp(rotation, -1.0, 1.0);
+	void ArcadeDrive(double forward, double rotation) {
+		forward = Clamp(forward, -1.0, 1.0);
+		rotation = Clamp(rotation, -1.0, 1.0);
 
 		double max = std::copysign(std::max(std::abs(forward), std::abs(rotation)), forward);
 		double left, right;
@@ -325,25 +325,25 @@ class DifferentialDrive {
 				right = forward - rotation;
 			}
 		}
-		left = clamp(left, -1.0, 1.0);
-		right = clamp(right, -1.0, 1.0);
+		left = Clamp(left, -1.0, 1.0);
+		right = Clamp(right, -1.0, 1.0);
 
-		tankDrive(left, right);
+		TankDrive(left, right);
 	}
 
-	void setLeftInverted(bool leftInverted) {
+	void SetLeftInverted(bool leftInverted) {
 		invertLeft = leftInverted;
 	}
 
-	bool getLeftInverted() {
+	bool GetLeftInverted() {
 		return invertLeft;
 	}
 
-	void setRightInverted(bool rightInverted) {
+	void SetRightInverted(bool rightInverted) {
 		invertRight = rightInverted;
 	}
 
-	bool getRightInverted() {
+	bool GetRightInverted() {
 		return invertRight;
 	}
 };
@@ -363,8 +363,8 @@ int main() {
 	if(!stick->IsOpen()) {
 		return -255;
 	}
-	drive->setLeftInverted(true);
-	drive->setRightInverted(true);
+	drive->SetLeftInverted(true);
+	drive->SetRightInverted(true);
 
 
 	bool startWasPressed = false;
@@ -386,12 +386,12 @@ int main() {
 
 		// Deal with start button
 		if(stick->GetButton(GAMEPAD::BUTTONS::START) && !startWasPressed) {
-			if(!hat->isEnabled()) {
-				hat->enable();
+			if(!hat->IsEnabled()) {
+				hat->Enable();
 				std::cout << "Robot is now enabled!\n";
 			}
 			else {
-				hat->disable();
+				hat->Disable();
 				std::cout << "Robot is now disabled.\n";
 			}
 			startWasPressed = true;
@@ -402,21 +402,21 @@ int main() {
 
 
 		// Deal with drive
-		if(hat->isEnabled()) {
-			drive->arcadeDrive(stick->GetAxis(GAMEPAD::AXES::LY), stick->GetAxis(GAMEPAD::AXES::LX) * -1.0);
+		if(hat->IsEnabled()) {
+			drive->ArcadeDrive(stick->GetAxis(GAMEPAD::AXES::LY), stick->GetAxis(GAMEPAD::AXES::LX) * -1.0);
 		}
 
 
 		// Deal with shooter
-		if(hat->isEnabled()) {
+		if(hat->IsEnabled()) {
 			// Button to run
 			if(stick->GetButton(GAMEPAD::BUTTONS::A) && !aWasPressed) {
-				shooter->set(shooterSpeed);
+				shooter->Set(shooterSpeed);
 				std::cout << "Shooter: ON\n";
 				aWasPressed = true;
 			}
 			else if(!stick->GetButton(GAMEPAD::BUTTONS::A) && aWasPressed) {
-				shooter->set(0.0);
+				shooter->Set(0.0);
 				std::cout << "Shooter: OFF\n";
 				aWasPressed = false;
 			}
