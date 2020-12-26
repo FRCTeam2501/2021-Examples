@@ -157,10 +157,10 @@ class Joystick {
 	}
 };
 
+class SpeedController; // Class prototype
+
 class ServoHat {
  private:
-	const static uint8_t MAX_CHANNELS = 16;
-
 	PCA9685Servo *hat;
 	uint8_t *angles;
 	bool enabled = false;
@@ -171,9 +171,29 @@ class ServoHat {
 
 	void setInternal(uint8_t channel, uint8_t angle, bool record) {
 		hat->SetAngle(channel, angle);
+		//std::cout << "set " << +channel << "," << +angle << "\n";
+
 
 		if(record)
 			angles[channel] = angle;
+	}
+
+ protected:
+	friend class SpeedController;
+	const static uint8_t MAX_CHANNELS = 16;
+
+	void set(uint8_t channel, double speed) {
+		if(!enabled || channel >= MAX_CHANNELS)
+			return;
+
+		setInternal(channel, doubleToAngle(speed), true);
+	}
+
+	void setAngle(uint8_t channel, uint8_t angle) {
+		if(!enabled || channel >= MAX_CHANNELS)
+			return;
+
+		setInternal(channel, angle, true);
 	}
 
  public:
@@ -222,19 +242,38 @@ class ServoHat {
 	bool isEnabled() {
 		return enabled;
 	}
+};
 
-	void set(uint8_t channel, double speed) {
-		if(!enabled || channel >= MAX_CHANNELS)
-			return;
+class SpeedController {
+ private:
+	ServoHat *hat;
+	uint8_t channel;
 
-		setInternal(channel, doubleToAngle(speed), true);
+ public:
+	SpeedController(ServoHat *hat, uint8_t channel) {
+		if(channel > ServoHat::MAX_CHANNELS) {
+			std::cerr << "Channel number is larger than " << ServoHat::MAX_CHANNELS << "\n";
+			exit(-3);
+		}
+
+		SpeedController::hat = hat;
+		SpeedController::channel = channel;
 	}
 
-	void setAngle(uint8_t channel, uint8_t angle) {
-		if(!enabled || channel >= MAX_CHANNELS)
-			return;
+	void set(double speed) {
+		hat->set(channel, speed);
+	}
 
-		setInternal(channel, angle, true);
+	void setAngle(uint8_t angle) {
+		hat->setAngle(channel, angle);
+	}
+};
+
+class DifferentialDrive {
+ private:
+ public:
+	DifferentialDrive(uint8_t left, uint8_t right) {
+
 	}
 };
 
@@ -277,10 +316,15 @@ void arcadeDrive(double y, double x, double &left, double &right) {
 
 int main() {
 	ServoHat *hat = new ServoHat();
+	SpeedController *lf = new SpeedController(hat, 0U),
+					*lr = new SpeedController(hat, 2U),
+					*rf = new SpeedController(hat, 1U),
+					*rr = new SpeedController(hat, 3U);
+
 	Joystick *stick = new Joystick();
 
 	if(!stick->isOpen()) {
-		return -3;
+		return -255;
 	}
 
 
@@ -315,10 +359,10 @@ int main() {
 			left *= -1.0;
 			right *= -1.0;
 
-			hat->set(0U, left);
-			hat->set(1U, right);
-			hat->set(2U, left);
-			hat->set(3U, right);
+			lf->set(left);
+			lr->set(left);
+			rf->set(right);
+			rr->set(right);
 			//std::cout << "left: " << left << ", right: " << right << "\n";
 		}
 	}
