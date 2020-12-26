@@ -23,12 +23,3 @@
 
 ### MacOS Client:
  - SSH+X11: Built in client (https://www.raspberrypi.org/documentation/remote-access/ssh/unix.md) 
-
-
-# Servo control stuff
-- https://github.com/vanvught/rpidmx512/tree/master/lib-pca9685
-- https://www.adafruit.com/product/2327
-
-
-# Gamepad stuff
-- To the kernel batman! https://www.kernel.org/doc/Documentation/input/joystick-api.txt
