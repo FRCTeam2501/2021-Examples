@@ -97,10 +97,10 @@ class Joystick {
 					axes[event.number] = event.value;
 					break;
 				case JS_EVENT_INIT:
-					std::cout << "Init event\n";
+					//std::cout << "Init event\n";
 					break;
 				default:
-					std::cout << "Other event\n";
+					//std::cout << "Other event\n";
 					break;
 			}
 			return true;
@@ -157,10 +157,88 @@ class Joystick {
 	}
 };
 
+class ServoHat {
+ private:
+	const static uint8_t MAX_CHANNELS = 16;
 
-uint8_t doubleToAngle(double d) {
-	return (d + 1) * 90.0;
-}
+	PCA9685Servo *hat;
+	uint8_t *angles;
+	bool enabled = false;
+
+	uint8_t doubleToAngle(double d) {
+		return (d + 1) * 90.0;
+	}
+
+	void setInternal(uint8_t channel, uint8_t angle, bool record) {
+		hat->SetAngle(channel, angle);
+
+		if(record)
+			angles[channel] = angle;
+	}
+
+ public:
+	ServoHat() {
+		if (getuid() != 0) {
+			fprintf(stderr, "Program is not started as \'root\' (sudo)\n");
+			exit(-1);
+		}
+
+		if (bcm2835_init() != 1) {
+			fprintf(stderr, "bcm2835_init() failed\n");
+			exit(-2);
+		}
+
+		hat = new PCA9685Servo();
+		hat->SetLeftUs(1050);
+		hat->SetCenterUs(1550);
+		hat->SetRightUs(2050);
+
+		angles = new uint8_t[16];
+		for(uint8_t i = 0; i < MAX_CHANNELS; i++) {
+			angles[i] = 90U;
+		}
+	}
+
+	void enable() {
+		if(enabled)
+			return;
+
+		enabled = true;
+		for(uint8_t i = 0; i < 16; i++) {
+			setInternal(i, angles[i], false);
+		}
+	}
+
+	void disable() {
+		if(!enabled)
+			return;
+
+		enabled = false;
+		for(uint8_t i = 0; i < 16; i++) {
+			setInternal(i, 90U, false);
+		}
+	}
+
+	bool isEnabled() {
+		return enabled;
+	}
+
+	void set(uint8_t channel, double speed) {
+		if(!enabled || channel >= MAX_CHANNELS)
+			return;
+
+		setInternal(channel, doubleToAngle(speed), true);
+	}
+
+	void setAngle(uint8_t channel, uint8_t angle) {
+		if(!enabled || channel >= MAX_CHANNELS)
+			return;
+
+		setInternal(channel, angle, true);
+	}
+};
+
+
 
 double clamp(double val, double min, double max) {
 	return std::min(std::max(val, min), max);
@@ -198,36 +276,19 @@ void arcadeDrive(double y, double x, double &left, double &right) {
 
 
 int main() {
-	if (getuid() != 0) {
-		fprintf(stderr, "Program is not started as \'root\' (sudo)\n");
-		return -1;
+	ServoHat *hat = new ServoHat();
+	Joystick *stick = new Joystick();
+
+	if(!stick->isOpen()) {
+		return -3;
 	}
-
-	if (bcm2835_init() != 1) {
-		fprintf(stderr, "bcm2835_init() failed\n");
-		return -2;
-	}
-
-	PCA9685Servo servo;
-	servo.SetLeftUs(1050);
-	servo.SetCenterUs(1550);
-	servo.SetRightUs(2050);
-
 
 
 	bool startWasPressed = false;
-	bool isEnabled = false;
-
-	Joystick *stick;
-	stick = new Joystick();
-
-	if(!stick->isOpen()) {
-		return -1;
-	}
-
 	while(true) {
 		// Sleep for 1ms
 		usleep(1000);
+
 
 		// Update joystick values
 		stick->update();
@@ -235,38 +296,30 @@ int main() {
 
 		// Deal with start button
 		if(stick->getButton(GAMEPAD::BUTTONS::START) && !startWasPressed) {
-			isEnabled = !isEnabled;
-
-			if(isEnabled)
+			if(!hat->isEnabled()) {
+				hat->enable();
 				std::cout << "Robot is now enabled!\n";
+			}
 			else {
+				hat->disable();
 				std::cout << "Robot is now disabled.\n";
-				servo.SetAngle(CHANNEL(0), ANGLE(90));
-				servo.SetAngle(CHANNEL(1), ANGLE(90));
-				servo.SetAngle(CHANNEL(2), ANGLE(90));
-				servo.SetAngle(CHANNEL(3), ANGLE(90));
 			}
 		}
 		startWasPressed = stick->getButton(GAMEPAD::BUTTONS::START);
 
 
 		// Deal with drive
-		if(isEnabled) {
+		if(hat->isEnabled()) {
 			double left, right;
 			arcadeDrive(stick->getAxis(GAMEPAD::AXES::LY), stick->getAxis(GAMEPAD::AXES::LX) * -1.0, left, right);
 			left *= -1.0;
 			right *= -1.0;
 
-			uint8_t leftAngle, rightAngle;
-			leftAngle = doubleToAngle(left);
-			rightAngle = doubleToAngle(right);
-
-			servo.SetAngle(CHANNEL(0), ANGLE(leftAngle));
-			servo.SetAngle(CHANNEL(1), ANGLE(rightAngle));
-			servo.SetAngle(CHANNEL(2), ANGLE(leftAngle));
-			servo.SetAngle(CHANNEL(3), ANGLE(rightAngle));
-			std::cout << "left: " << left << ", right: " << right << "\n";
-			std::cout << "leftAngle: " << +leftAngle << ", rightAngle: " << +rightAngle << "\n";
+			hat->set(0U, left);
+			hat->set(1U, right);
+			hat->set(2U, left);
+			hat->set(3U, right);
+			//std::cout << "left: " << left << ", right: " << right << "\n";
 		}
 	}
 	return 0;
