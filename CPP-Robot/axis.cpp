@@ -77,12 +77,12 @@ class Joystick {
 		}
 	}
 
-	bool isOpen() {
+	bool IsOpen() {
 		return fd != -1;
 	}
 
-	bool update() {
-		if(!isOpen())
+	bool Update() {
+		if(!IsOpen())
 			return false;
 
 		struct js_event event;
@@ -109,15 +109,15 @@ class Joystick {
 			return false;
 	}
 
-	uint8_t getButtonCount() {
-		if(!isOpen())
+	uint8_t GetButtonCount() {
+		if(!IsOpen())
 			return 0;
 
 		return btnCount;
 	}
 
-	bool getButton(uint8_t button) {
-		if(!isOpen())
+	bool GetButton(uint8_t button) {
+		if(!IsOpen())
 			return false;
 
 		if(button >= btnCount) {
@@ -127,15 +127,15 @@ class Joystick {
 		return btns[button];
 	}
 
-	uint8_t getAxisCount() {
-		if(!isOpen())
+	uint8_t GetAxisCount() {
+		if(!IsOpen())
 			return 0;
 
 		return axisCount;
 	}
 
-	int16_t getRawAxis(uint8_t axis) {
-		if(!isOpen())
+	int16_t GetRawAxis(uint8_t axis) {
+		if(!IsOpen())
 			return false;
 
 		if(axis >= axisCount) {
@@ -145,8 +145,8 @@ class Joystick {
 		return axes[axis];
 	}
 
-	double getAxis(uint8_t axis) {
-		if(!isOpen())
+	double GetAxis(uint8_t axis) {
+		if(!IsOpen())
 			return false;
 
 		if(axis >= axisCount) {
@@ -360,7 +360,7 @@ int main() {
 	DifferentialDrive *drive = new DifferentialDrive(lf, lr, rf, rr);
 	Joystick *stick = new Joystick();
 
-	if(!stick->isOpen()) {
+	if(!stick->IsOpen()) {
 		return -255;
 	}
 	drive->setLeftInverted(true);
@@ -381,11 +381,11 @@ int main() {
 
 
 		// Update joystick values
-		stick->update();
+		stick->Update();
 
 
 		// Deal with start button
-		if(stick->getButton(GAMEPAD::BUTTONS::START) && !startWasPressed) {
+		if(stick->GetButton(GAMEPAD::BUTTONS::START) && !startWasPressed) {
 			if(!hat->isEnabled()) {
 				hat->enable();
 				std::cout << "Robot is now enabled!\n";
@@ -396,49 +396,49 @@ int main() {
 			}
 			startWasPressed = true;
 		}
-		else if(!stick->getButton(GAMEPAD::BUTTONS::START) && startWasPressed) {
+		else if(!stick->GetButton(GAMEPAD::BUTTONS::START) && startWasPressed) {
 			startWasPressed = false;
 		}
 
 
 		// Deal with drive
 		if(hat->isEnabled()) {
-			drive->arcadeDrive(stick->getAxis(GAMEPAD::AXES::LY), stick->getAxis(GAMEPAD::AXES::LX) * -1.0);
+			drive->arcadeDrive(stick->GetAxis(GAMEPAD::AXES::LY), stick->GetAxis(GAMEPAD::AXES::LX) * -1.0);
 		}
 
 
 		// Deal with shooter
 		if(hat->isEnabled()) {
 			// Button to run
-			if(stick->getButton(GAMEPAD::BUTTONS::A) && !aWasPressed) {
+			if(stick->GetButton(GAMEPAD::BUTTONS::A) && !aWasPressed) {
 				shooter->set(shooterSpeed);
 				std::cout << "Shooter: ON\n";
 				aWasPressed = true;
 			}
-			else if(!stick->getButton(GAMEPAD::BUTTONS::A) && aWasPressed) {
+			else if(!stick->GetButton(GAMEPAD::BUTTONS::A) && aWasPressed) {
 				shooter->set(0.0);
 				std::cout << "Shooter: OFF\n";
 				aWasPressed = false;
 			}
 
 			// Speed up
-			if(stick->getAxis(GAMEPAD::AXES::DY) > 0.5 && !dyWasUp) {
+			if(stick->GetAxis(GAMEPAD::AXES::DY) > 0.5 && !dyWasUp) {
 				shooterSpeed = std::min(shooterSpeed + SHOOTER_ADJUST, 1.0);
 				dyWasUp = true;
 				dyWasDown = false;
 			}
-			else if(stick->getAxis(GAMEPAD::AXES::DY) < 0.5 && dyWasUp) {
+			else if(stick->GetAxis(GAMEPAD::AXES::DY) < 0.5 && dyWasUp) {
 				dyWasUp = false;
 			}
 
 			// Speed down
-			if(stick->getAxis(GAMEPAD::AXES::DY) < -0.5 && !dyWasDown) {
+			if(stick->GetAxis(GAMEPAD::AXES::DY) < -0.5 && !dyWasDown) {
 				shooterSpeed = std::max(shooterSpeed - SHOOTER_ADJUST, 0.0);
 				shooterSpeed -= SHOOTER_ADJUST;
 				dyWasUp = false;
 				dyWasDown = true;
 			}
-			else if(stick->getAxis(GAMEPAD::AXES::DY) > -0.5 && dyWasDown) {
+			else if(stick->GetAxis(GAMEPAD::AXES::DY) > -0.5 && dyWasDown) {
 				dyWasDown = false;
 			}
 		}
