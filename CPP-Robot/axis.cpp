@@ -271,47 +271,83 @@ class SpeedController {
 
 class DifferentialDrive {
  private:
- public:
-	DifferentialDrive(uint8_t left, uint8_t right) {
+	SpeedController *lf, *lr, *rf, *rr;
+	bool invertLeft = false, invertRight = false;
 
+	double clamp(double val, double min, double max) {
+		return std::min(std::max(val, min), max);
+	}
+
+ public:
+	DifferentialDrive(SpeedController *lf, SpeedController *lr, SpeedController *rf, SpeedController *rr) {
+		DifferentialDrive::lf = lf;
+		DifferentialDrive::lr = lr;
+		DifferentialDrive::rf = rf;
+		DifferentialDrive::rr = rr;
+	}
+
+	void tankDrive(double left, double right) {
+		if(invertLeft)
+			left *= -1.0;
+		if(invertRight)
+			right *= -1.0;
+
+		DifferentialDrive::lf->set(left);
+		DifferentialDrive::lr->set(left);
+		DifferentialDrive::rf->set(right);
+		DifferentialDrive::rr->set(right);
+	}
+
+	void arcadeDrive(double forward, double rotation) {
+		forward = clamp(forward, -1.0, 1.0);
+		rotation = clamp(rotation, -1.0, 1.0);
+
+		double max = std::copysign(std::max(std::abs(forward), std::abs(rotation)), forward);
+		double left, right;
+
+		if(forward >= 0.0) {
+			// First quadrant, else second quadrant
+			if (rotation >= 0.0) {
+				left = max;
+				right = forward - rotation;
+			} else {
+				left = forward + rotation;
+				right = max;
+			}
+		}
+		else {
+			// Third quadrant, else fourth quadrant
+			if (rotation >= 0.0) {
+				left = forward + rotation;
+				right = max;
+			} else {
+				left = max;
+				right = forward - rotation;
+			}
+		}
+		left = clamp(left, -1.0, 1.0);
+		right = clamp(right, -1.0, 1.0);
+
+		tankDrive(left, right);
+	}
+
+	void setLeftInverted(bool leftInverted) {
+		invertLeft = leftInverted;
+	}
+
+	bool getLeftInverted() {
+		return invertLeft;
+	}
+
+	void setRightInverted(bool rightInverted) {
+		invertRight = rightInverted;
+	}
+
+	bool getRightInverted() {
+		return invertRight;
 	}
 };
 
-
-
-double clamp(double val, double min, double max) {
-	return std::min(std::max(val, min), max);
-}
-
-void arcadeDrive(double y, double x, double &left, double &right) {
-	y = clamp(y, -1.0, 1.0);
-	x = clamp(x, -1.0, 1.0);
-
-	double max = std::copysign(std::max(std::abs(y), std::abs(x)), y);
-
-	if(y >= 0.0) {
-		// First quadrant, else second quadrant
-		if (x >= 0.0) {
-			left = max;
-			right = y - x;
-		} else {
-			left = y + x;
-			right = max;
-		}
-  	}
-	else {
-		// Third quadrant, else fourth quadrant
-		if (x >= 0.0) {
-			left = y + x;
-			right = max;
-		} else {
-			left = max;
-			right = y - x;
-		}
-	}
-	left = clamp(left, -1.0, 1.0);
-	right = clamp(right, -1.0, 1.0);
-}
 
 
 int main() {
@@ -320,12 +356,14 @@ int main() {
 					*lr = new SpeedController(hat, 2U),
 					*rf = new SpeedController(hat, 1U),
 					*rr = new SpeedController(hat, 3U);
-
+	DifferentialDrive *drive = new DifferentialDrive(lf, lr, rf, rr);
 	Joystick *stick = new Joystick();
 
 	if(!stick->isOpen()) {
 		return -255;
 	}
+	drive->setLeftInverted(true);
+	drive->setRightInverted(true);
 
 
 	bool startWasPressed = false;
@@ -354,16 +392,7 @@ int main() {
 
 		// Deal with drive
 		if(hat->isEnabled()) {
-			double left, right;
-			arcadeDrive(stick->getAxis(GAMEPAD::AXES::LY), stick->getAxis(GAMEPAD::AXES::LX) * -1.0, left, right);
-			left *= -1.0;
-			right *= -1.0;
-
-			lf->set(left);
-			lr->set(left);
-			rf->set(right);
-			rr->set(right);
-			//std::cout << "left: " << left << ", right: " << right << "\n";
+			drive->arcadeDrive(stick->getAxis(GAMEPAD::AXES::LY), stick->getAxis(GAMEPAD::AXES::LX) * -1.0);
 		}
 	}
 	return 0;
