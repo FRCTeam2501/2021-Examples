@@ -368,12 +368,7 @@ int main() {
 
 
 	bool startWasPressed = false;
-
 	bool aWasPressed = false;
-	double shooterSpeed = 0.5;
-	constexpr double SHOOTER_ADJUST = 0.05;
-	bool dyWasUp = false;
-	bool dyWasDown = false;
 	
 	while(true) {
 		// Sleep for 1ms
@@ -411,7 +406,7 @@ int main() {
 		if(hat->IsEnabled()) {
 			// Button to run
 			if(stick->GetButton(GAMEPAD::BUTTONS::A) && !aWasPressed) {
-				shooter->Set(shooterSpeed);
+				shooter->Set(0.5);
 				std::cout << "Shooter: ON\n";
 				aWasPressed = true;
 			}
@@ -419,27 +414,6 @@ int main() {
 				shooter->Set(0.0);
 				std::cout << "Shooter: OFF\n";
 				aWasPressed = false;
-			}
-
-			// Speed up
-			if(stick->GetAxis(GAMEPAD::AXES::DY) > 0.5 && !dyWasUp) {
-				shooterSpeed = std::min(shooterSpeed + SHOOTER_ADJUST, 1.0);
-				dyWasUp = true;
-				dyWasDown = false;
-			}
-			else if(stick->GetAxis(GAMEPAD::AXES::DY) < 0.5 && dyWasUp) {
-				dyWasUp = false;
-			}
-
-			// Speed down
-			if(stick->GetAxis(GAMEPAD::AXES::DY) < -0.5 && !dyWasDown) {
-				shooterSpeed = std::max(shooterSpeed - SHOOTER_ADJUST, 0.0);
-				shooterSpeed -= SHOOTER_ADJUST;
-				dyWasUp = false;
-				dyWasDown = true;
-			}
-			else if(stick->GetAxis(GAMEPAD::AXES::DY) > -0.5 && dyWasDown) {
-				dyWasDown = false;
 			}
 		}
 	}
