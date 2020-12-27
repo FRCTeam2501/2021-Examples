@@ -26,4 +26,6 @@
 
 
 # Future research
- - WS2812B status LED: https://github.com/jazzycamel/ws28128-rpi
+## WS2812B status LED
+ - https://github.com/jazzycamel/ws28128-rpi
+ - https://github.com/jgarff/rpi_ws281x (probably better)
