@@ -210,7 +210,7 @@ class ServoHat {
 
 		hat = new PCA9685Servo();
 		hat->SetLeftUs(1050);
-		hat->SetCenterUs(1550);
+		//hat->SetCenterUs(1550);
 		hat->SetRightUs(2050);
 
 		angles = new uint8_t[16];
