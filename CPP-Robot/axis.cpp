@@ -260,6 +260,10 @@ class SpeedController {
 		SpeedController::channel = channel;
 	}
 
+	SpeedController(ServoHat &hat, uint8_t channel) {
+		SpeedController(&hat, channel);
+	}
+
 	void Set(double speed) {
 		hat->Set(channel, speed);
 	}
@@ -284,6 +288,13 @@ class DifferentialDrive {
 		DifferentialDrive::lr = lr;
 		DifferentialDrive::rf = rf;
 		DifferentialDrive::rr = rr;
+	}
+
+	DifferentialDrive(SpeedController &lf, SpeedController &lr, SpeedController &rf, SpeedController &rr) {
+		DifferentialDrive::lf = &lf;
+		DifferentialDrive::lr = &lr;
+		DifferentialDrive::rf = &rf;
+		DifferentialDrive::rr = &rr;
 	}
 
 	void TankDrive(double left, double right) {
@@ -359,6 +370,7 @@ int main() {
 					*shooter = new SpeedController(hat, 4U);
 	DifferentialDrive *drive = new DifferentialDrive(lf, lr, rf, rr);
 	Joystick *stick = new Joystick();
+
 
 	if(!stick->IsOpen()) {
 		return -255;
