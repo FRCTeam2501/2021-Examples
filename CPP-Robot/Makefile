@@ -1,4 +1,4 @@
-LIB_ROOT = /home/pi/
+LIB_ROOT = /home/pi
 LIB_DIR = 2501lib
 
 CXX = g++

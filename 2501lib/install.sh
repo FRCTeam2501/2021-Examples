@@ -26,6 +26,6 @@ sudo make install
 # Download and extract RPIDMX512 library
 echo -e '\033[0;31m***** INSTALLING RPIDMX512 *****\033[0m'
 cd ${LIB_ROOT}/${LIB_DIR}
-git clone https://github.com/vanvught/rpidmx512.git
+git clone https://github.com/TylerSeiford/rpidmx512.git
 cd rpidmx512/lib-pca9685/
 make -f Makefile.Linux "DEF=-DRASPPI"
