@@ -384,7 +384,7 @@ int main() {
 	
 	while(true) {
 		// Sleep for 1ms
-		usleep(1000);
+		usleep(1000U);
 
 
 		// Update joystick values
