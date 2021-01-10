@@ -23,9 +23,3 @@
 
 ### MacOS Client:
  - SSH+X11: Built in client (https://www.raspberrypi.org/documentation/remote-access/ssh/unix.md) 
-
-
-# Future research
-## WS2812B status LED
- - https://github.com/jazzycamel/ws28128-rpi
- - https://github.com/jgarff/rpi_ws281x (probably better)
