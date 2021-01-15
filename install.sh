@@ -2,7 +2,7 @@
 
 # Defining variables
 LIB_ROOT=~
-LIB_DIR=2501lib
+LIB_DIR=lib2501
 
 
 
