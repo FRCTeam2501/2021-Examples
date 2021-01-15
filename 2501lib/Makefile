@@ -1,10 +1,7 @@
-LIB_ROOT = /home/pi
-LIB_DIR = lib2501
-
 CXX = g++
 INCFLAGS = 
 CXXFLAGS = -Wall -Werror -O3 -fno-rtti -std=c++11 -DNDEBUG
-LFLAGS = -lpca9685 -lbcm2835
+LFLAGS = -lbcm2835 -lpca9685
 
 OBJS = $(patsubst %.cpp, %.out, $(wildcard *.cpp))
 
@@ -17,3 +14,8 @@ all: $(OBJS)
 clean:
 	rm -f *.out
 	rm -f *.a
+
+install:
+	mkdir -p /usr/local/include/2501
+	cp *.h /usr/local/include/2501
+	cp lib2501.a /usr/local/lib

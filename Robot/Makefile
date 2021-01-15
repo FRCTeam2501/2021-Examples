@@ -1,7 +1,7 @@
 CXX = g++
-INCFLAGS = -I../2501lib
+INCFLAGS = 
 CXXFLAGS = -Wall -Werror -O3 -fno-rtti -std=c++11 -DNDEBUG
-LFLAGS = -lpca9685 -lbcm2835 -L../2501lib -l2501
+LFLAGS = -lbcm2835 -lpca9685 -l2501
 
 all: $(patsubst %.cpp, %.out, $(wildcard *.cpp))
 

@@ -27,8 +27,8 @@ cd rpidmx512/lib-pca9685/
 echo -e '\033[1;36m - Building library\033[0m'
 make -f Makefile.Linux "DEF=-DRASPPI"
 echo -e '\033[1;36m - Installing library\033[0m'
-sudo cp include/* /usr/local/include
-sudo cp lib_linux/libpca9685.a /usr/local/lib/
+sudo mv include/* /usr/local/include
+sudo mv lib_linux/libpca9685.a /usr/local/lib/
 
 
 # Download and extract RPI_WS281X library

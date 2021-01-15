@@ -1,4 +1,11 @@
-#include "joystick.h"
+#include <iostream>
+
+#include <fcntl.h>
+#include <unistd.h>
+#include <linux/joystick.h>
+
+#include "Joystick.h"
+
 
 Joystick::Joystick() {
 	// TODO: Allow different js numbers for multi-joystick usage
