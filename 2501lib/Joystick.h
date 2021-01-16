@@ -40,7 +40,13 @@ class Joystick {
 	int16_t *axes;
 	uint8_t axisCount;
 
+	void init(std::string deviceID);
+
  public:
+	Joystick(std::string deviceID);
+
+	Joystick(uint8_t deviceID);
+
 	Joystick();
 
 	bool IsOpen();

@@ -16,7 +16,7 @@ int main() {
 					*rr = new SpeedController(hat, 3U),
 					*shooter = new SpeedController(hat, 4U);
 	DifferentialDrive *drive = new DifferentialDrive(lf, lr, rf, rr);
-	Joystick *stick = new Joystick();
+	Joystick *stick = new Joystick(0U);
 
 
 	if(!stick->IsOpen()) {

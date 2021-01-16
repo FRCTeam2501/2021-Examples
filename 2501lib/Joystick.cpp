@@ -7,11 +7,24 @@
 #include "Joystick.h"
 
 
+Joystick::Joystick(std::string deviceID) {
+	init(deviceID);
+}
+
+Joystick::Joystick(uint8_t deviceID) {
+	std::string id = "/dev/input/js" + std::to_string(deviceID);
+	init(id);
+}
+
 Joystick::Joystick() {
-	// TODO: Allow different js numbers for multi-joystick usage
-	fd = open("/dev/input/js0", (O_RDONLY | O_NONBLOCK));
+	init("/dev/input/js0");
+}
+
+void Joystick::init(std::string deviceID) {
+	std::cout << "New device: " << deviceID << "\n";
+	fd = open(deviceID.c_str(), (O_RDONLY | O_NONBLOCK));
 	if(fd == -1) {
-		std::cerr << "Error opening joystick on js0!\n";
+		std::cerr << "Error opening joystick on '" << deviceID << "'!\n";
 	}
 	//std::cout << "Opened joystick with fd: " << fd << "\n";
 
