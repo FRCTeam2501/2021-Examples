@@ -3,6 +3,7 @@
 #include <unistd.h>
 
 #include "bcm2835.h"
+#include "pca9685servo.h"
 
 #include "ServoHat.h"
 

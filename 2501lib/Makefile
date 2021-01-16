@@ -9,7 +9,7 @@ all: $(OBJS)
 	ar rcs lib2501.a $(OBJS)
 
 %.out: %.cpp Makefile
-	$(CXX) -c $< $(INCFLAGS) $(CXXFLAGS) -o $@ $(LFLAGS)
+	$(CXX) -c $< -o $@ $(INCFLAGS) $(CXXFLAGS) $(LFLAGS)
 
 clean:
 	rm -f *.out
