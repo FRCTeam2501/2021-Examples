@@ -1,6 +1,3 @@
-LIB_ROOT = /home/pi
-LIB_DIR = 2501lib
-
 CXX = g++
 INCFLAGS = 
 CXXFLAGS = -Wall -Werror -O3 -fno-rtti -std=c++11 -DNDEBUG
