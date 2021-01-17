@@ -9,6 +9,8 @@
 
 
 int main() {
+	Joystick *stick = new Joystick(0U);
+
 	ServoHat *hat = new ServoHat();
 	SpeedController *lf = new SpeedController(hat, 0U),
 					*lr = new SpeedController(hat, 2U),
@@ -16,7 +18,6 @@ int main() {
 					*rr = new SpeedController(hat, 3U),
 					*shooter = new SpeedController(hat, 4U);
 	DifferentialDrive *drive = new DifferentialDrive(lf, lr, rf, rr);
-	Joystick *stick = new Joystick(0U);
 
 
 	if(!stick->IsOpen()) {

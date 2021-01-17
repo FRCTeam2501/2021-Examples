@@ -21,7 +21,7 @@ Joystick::Joystick() {
 }
 
 void Joystick::init(std::string deviceID) {
-	std::cout << "New device: " << deviceID << "\n";
+	//std::cout << "New device: " << deviceID << "\n";
 	fd = open(deviceID.c_str(), (O_RDONLY | O_NONBLOCK));
 	if(fd == -1) {
 		std::cerr << "Error opening joystick on '" << deviceID << "'!\n";

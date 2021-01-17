@@ -1,12 +1,16 @@
 CXX = g++
 INCFLAGS = 
 CXXFLAGS = -Wall -Werror -O3 -fno-rtti -std=c++11 -DNDEBUG
-LFLAGS = -l2501 -lbcm2835 -lpca9685
+LFLAGS = -l2501 -lpca9685 -lbcm2835
 
-all: $(patsubst %.cpp, %.out, $(wildcard *.cpp))
+OBJS = $(patsubst %.cpp, %.out, $(wildcard *.cpp))
+
+all: $(OBJS)
+	$(CXX) -o main.exe $(OBJS) $(INCFLAGS) $(CXXFLAGS) $(LFLAGS)
 
 %.out: %.cpp Makefile
-	$(CXX) $< $(INCFLAGS) $(CXXFLAGS) -o $@ $(LFLAGS)
+	$(CXX) -c $< -o $@ $(INCFLAGS) $(CXXFLAGS) $(LFLAGS)
 
 clean:
 	rm -f *.out
+	rm -f *.exe
