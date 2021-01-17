@@ -33,11 +33,9 @@
 //#define STRIP_TYPE            SK6812_STRIP_RGBW		// SK6812RGBW (NOT SK6812RGB)
 
 #define WIDTH                   9
-#define HEIGHT                  1
-#define LED_COUNT               (WIDTH * HEIGHT)
+#define LED_COUNT               WIDTH
 
 int width = WIDTH;
-int height = HEIGHT;
 int led_count = LED_COUNT;
 
 ws2811_t ledstring;
@@ -48,27 +46,21 @@ static uint8_t running = 1;
 
 void matrix_render(void) {
 	for (int x = 0; x < width; x++) {
-		for (int y = 0; y < height; y++) {
-			ledstring.channel[0].leds[(y * width) + x] = matrix[y * width + x];
-		}
+		ledstring.channel[0].leds[x] = matrix[x];
 	}
 }
 
 void matrix_raise(void) {
-	for (int y = 0; y < (height - 1); y++) {
-		for (int x = 0; x < width; x++) {
-			// This is for the 8x8 Pimoroni Unicorn-HAT where the LEDS in subsequent
-			// rows are arranged in opposite directions
-			matrix[y * width + x] = matrix[(y + 1)*width + width - x - 1];
-		}
+	for (int x = 0; x < width; x++) {
+		// This is for the 8x8 Pimoroni Unicorn-HAT where the LEDS in subsequent
+		// rows are arranged in opposite directions
+		matrix[x] = matrix[width + width - x - 1];
 	}
 }
 
 void matrix_clear(void) {
-	for (int y = 0; y < (height); y++) {
-		for (int x = 0; x < width; x++) {
-			matrix[y * width + x] = 0;
-		}
+	for (int x = 0; x < width; x++) {
+		matrix[x] = 0;
 	}
 }
 
@@ -91,7 +83,7 @@ void matrix_bottom(void) {
 			dotspos[i] = 0;
 		}
 
-		matrix[dotspos[i] + (height - 1) * width] = dotcolors[i];
+		matrix[dotspos[i]] = dotcolors[i];
 	}
 }
 
@@ -125,7 +117,7 @@ int main(int argc, char *argv[]) {
 
 	ws2811_return_t ret;
 
-	matrix = (ws2811_led_t *) malloc(sizeof(ws2811_led_t) * width * height);
+	matrix = (ws2811_led_t *) malloc(sizeof(ws2811_led_t) * width);
 
 	setup_handlers();
 
