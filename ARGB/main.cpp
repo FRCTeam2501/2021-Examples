@@ -24,19 +24,7 @@
 
 #define ARRAY_SIZE(stuff)       (sizeof(stuff) / sizeof(stuff[0]))
 
-// defaults for cmdline options
-#define TARGET_FREQ             WS2811_TARGET_FREQ
-#define GPIO_PIN                21
-#define DMA                     10
-//#define STRIP_TYPE            WS2811_STRIP_RGB		// WS2812/SK6812RGB integrated chip+leds
-#define STRIP_TYPE              WS2811_STRIP_GBR		// WS2812/SK6812RGB integrated chip+leds
-//#define STRIP_TYPE            SK6812_STRIP_RGBW		// SK6812RGBW (NOT SK6812RGB)
-
-#define WIDTH                   9
-#define LED_COUNT               WIDTH
-
-int width = WIDTH;
-int led_count = LED_COUNT;
+#define LED_COUNT               9
 
 ws2811_t ledstring;
 
@@ -45,21 +33,21 @@ ws2811_led_t *matrix;
 static uint8_t running = 1;
 
 void matrix_render(void) {
-	for (int x = 0; x < width; x++) {
+	for (int x = 0; x < LED_COUNT; x++) {
 		ledstring.channel[0].leds[x] = matrix[x];
 	}
 }
 
 void matrix_raise(void) {
-	for (int x = 0; x < width; x++) {
+	for (int x = 0; x < LED_COUNT; x++) {
 		// This is for the 8x8 Pimoroni Unicorn-HAT where the LEDS in subsequent
 		// rows are arranged in opposite directions
-		matrix[x] = matrix[width + width - x - 1];
+		matrix[x] = matrix[LED_COUNT + LED_COUNT - x - 1];
 	}
 }
 
 void matrix_clear(void) {
-	for (int x = 0; x < width; x++) {
+	for (int x = 0; x < LED_COUNT; x++) {
 		matrix[x] = 0;
 	}
 }
@@ -79,7 +67,7 @@ ws2811_led_t dotcolors[] = {
 void matrix_bottom(void) {
 	for (int i = 0; i < (int)(ARRAY_SIZE(dotspos)); i++) {
 		dotspos[i]++;
-		if (dotspos[i] > (width - 1)) {
+		if (dotspos[i] > (LED_COUNT - 1)) {
 			dotspos[i] = 0;
 		}
 
@@ -103,13 +91,13 @@ static void setup_handlers(void) {
 
 
 int main(int argc, char *argv[]) {
-	ledstring.freq = TARGET_FREQ;
-	ledstring.dmanum = DMA;
-	ledstring.channel[0].gpionum = GPIO_PIN;
+	ledstring.freq = WS2811_TARGET_FREQ;
+	ledstring.dmanum = 10;
+	ledstring.channel[0].gpionum = 21;
 	ledstring.channel[0].count = LED_COUNT;
 	ledstring.channel[0].invert = 0;
 	ledstring.channel[0].brightness = 255;
-	ledstring.channel[0].strip_type = STRIP_TYPE;
+	ledstring.channel[0].strip_type = WS2811_STRIP_GRB;
 	ledstring.channel[1].gpionum = 0;
 	ledstring.channel[1].count = 0;
 	ledstring.channel[1].invert = 0;
@@ -117,7 +105,7 @@ int main(int argc, char *argv[]) {
 
 	ws2811_return_t ret;
 
-	matrix = (ws2811_led_t *) malloc(sizeof(ws2811_led_t) * width);
+	matrix = (ws2811_led_t *) malloc(sizeof(ws2811_led_t) * LED_COUNT);
 
 	setup_handlers();
 
