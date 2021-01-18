@@ -78,7 +78,7 @@ static void setup_handlers(void) {
 }
 
 
-int main(int argc, char *argv[]) {
+void init() {
 	ledstring.freq = WS2811_TARGET_FREQ;
 	ledstring.dmanum = 10;
 	ledstring.channel[0].gpionum = 21;
@@ -91,35 +91,48 @@ int main(int argc, char *argv[]) {
 	ledstring.channel[1].invert = 0;
 	ledstring.channel[1].brightness = 0;
 
-	ws2811_return_t ret;
-
 	setup_handlers();
+
+	ws2811_return_t ret;
 
 	if ((ret = ws2811_init(&ledstring)) != WS2811_SUCCESS) {
 		fprintf(stderr, "ws2811_init failed: %s\n", ws2811_get_return_t_str(ret));
-		return ret;
+		exit(ret);
 	}
 	std::cout << "Started\n";
+}
+
+void cycle() {
+	ws2811_return_t ret;
+	matrix_raise();
+	matrix_bottom();
+
+	if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS)
+	{
+		fprintf(stderr, "ws2811_render failed: %s\n", ws2811_get_return_t_str(ret));
+		exit(ret);
+	}
+}
+
+void finish() {
+	matrix_clear();
+	ws2811_render(&ledstring);
+
+	ws2811_fini(&ledstring);
+}
+
+
+int main(int argc, char *argv[]) {
+	init();
 
 	while (running) {
-		matrix_raise();
-		matrix_bottom();
-
-		if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS)
-		{
-			fprintf(stderr, "ws2811_render failed: %s\n", ws2811_get_return_t_str(ret));
-			break;
-		}
+		cycle();
 
 		// 15 frames /sec
 		usleep(1000000 / 15);
 	}
 
-	matrix_clear();
-	ws2811_render(&ledstring);
+	finish();
 
-	ws2811_fini(&ledstring);
-
-	printf ("\n");
-	return ret;
+	return 0;
 }
