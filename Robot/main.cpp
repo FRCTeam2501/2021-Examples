@@ -2,6 +2,7 @@
 
 #include <unistd.h>
 
+#include "2501/ARGB.h"
 #include "2501/DifferentialDrive.h"
 #include "2501/Joystick.h"
 #include "2501/ServoHat.h"
@@ -10,6 +11,9 @@
 
 int main() {
 	Joystick *stick = new Joystick(0U);
+	if(!stick->IsOpen()) {
+		return -255;
+	}
 
 	ServoHat *hat = new ServoHat();
 	SpeedController *lf = new SpeedController(hat, 0U),
@@ -18,13 +22,11 @@ int main() {
 					*rr = new SpeedController(hat, 3U),
 					*shooter = new SpeedController(hat, 4U);
 	DifferentialDrive *drive = new DifferentialDrive(lf, lr, rf, rr);
-
-
-	if(!stick->IsOpen()) {
-		return -255;
-	}
 	drive->SetLeftInverted(true);
 	drive->SetRightInverted(true);
+
+	ARGB *rgb = new ARGB();
+	rgb->Set(COLORS::BLUE);
 
 
 	bool startWasPressed = false;
@@ -43,10 +45,12 @@ int main() {
 		if(stick->GetButton(GAMEPAD::BUTTONS::START) && !startWasPressed) {
 			if(!hat->IsEnabled()) {
 				hat->Enable();
+				rgb->Set(COLORS::GREEN);
 				std::cout << "Robot is now enabled!\n";
 			}
 			else {
 				hat->Disable();
+				rgb->Set(COLORS::RED);
 				std::cout << "Robot is now disabled.\n";
 			}
 			startWasPressed = true;
@@ -77,5 +81,7 @@ int main() {
 			}
 		}
 	}
+
+	delete rgb;
 	return 0;
 }

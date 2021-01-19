@@ -103,12 +103,11 @@ void init() {
 }
 
 void cycle() {
-	ws2811_return_t ret;
 	matrix_raise();
 	matrix_bottom();
 
-	if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS)
-	{
+	ws2811_return_t ret = ws2811_render(&ledstring);
+	if (ret != WS2811_SUCCESS) {
 		fprintf(stderr, "ws2811_render failed: %s\n", ws2811_get_return_t_str(ret));
 		exit(ret);
 	}
