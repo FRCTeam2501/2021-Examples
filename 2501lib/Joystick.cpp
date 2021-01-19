@@ -33,8 +33,10 @@ void Joystick::init(std::string deviceID) {
 	ioctl(fd, JSIOCGBUTTONS, &btnCount);
 	//std::cout << "Joystick has " << +btnCount << " buttons\n";
 	btns = new bool[btnCount];
+	lastBtns = new bool[btnCount];
 	for(uint8_t i = 0; i < btnCount; i++) {
 		btns[i] = false;
+		lastBtns[i] = false;
 	}
 
 
@@ -53,6 +55,10 @@ bool Joystick::IsOpen() {
 bool Joystick::Update() {
 	if(!IsOpen())
 		return false;
+
+	for(uint8_t i = 0; i < btnCount; i++) {
+		lastBtns[i] = btns[i];
+	}
 
 	struct js_event event;
 	if(read(fd, &event, sizeof(event)) > 0) {
@@ -89,11 +95,20 @@ bool Joystick::GetButton(uint8_t button) {
 	if(!IsOpen())
 		return false;
 
-	if(button >= btnCount) {
+	if(button >= btnCount)
 		return false;
-	}
 
 	return btns[button];
+}
+
+bool Joystick::HasButtonChanged(uint8_t button) {
+	if(!IsOpen())
+		return false;
+
+	if(button >= btnCount)
+		return false;
+
+	return btns[button] != lastBtns[button];
 }
 
 uint8_t Joystick::GetAxisCount() {

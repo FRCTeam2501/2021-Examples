@@ -36,6 +36,7 @@ class Joystick {
  private:
 	int fd = -1;
 	bool *btns;
+	bool *lastBtns;
 	uint8_t btnCount;
 	int16_t *axes;
 	uint8_t axisCount;
@@ -56,6 +57,8 @@ class Joystick {
 	uint8_t GetButtonCount();
 
 	bool GetButton(uint8_t button);
+
+	bool HasButtonChanged(uint8_t button);
 
 	uint8_t GetAxisCount();
 

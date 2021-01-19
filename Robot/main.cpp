@@ -32,8 +32,6 @@ Joystick *stick;
 ServoHat *hat;
 SpeedController *lf, *lr, *rf, *rr, *shooter;
 DifferentialDrive *drive;
-bool startWasPressed = false;
-bool aWasPressed = false;
 
 void Setup() {
 	stick = new Joystick(0U);
@@ -60,15 +58,15 @@ void Enabled() {
 	drive->ArcadeDrive(stick->GetAxis(GAMEPAD::AXES::LY), stick->GetAxis(GAMEPAD::AXES::LX) * -1.0);
 
 	// Deal with shooter
-	if(stick->GetButton(GAMEPAD::BUTTONS::A) && !aWasPressed) {
-		shooter->Set(0.5);
-		std::cout << "Shooter: ON\n";
-		aWasPressed = true;
-	}
-	else if(!stick->GetButton(GAMEPAD::BUTTONS::A) && aWasPressed) {
-		shooter->Set(0.0);
-		std::cout << "Shooter: OFF\n";
-		aWasPressed = false;
+	if(stick->HasButtonChanged(GAMEPAD::BUTTONS::A)) {
+		if(stick->GetButton(GAMEPAD::BUTTONS::A)) {
+			shooter->Set(0.5);
+			std::cout << "Shooter: ON\n";
+		}
+		else {
+			shooter->Set(0.0);
+			std::cout << "Shooter: OFF\n";
+		}
 	}
 }
 
@@ -88,7 +86,8 @@ int main() {
 
 
 		// Deal with start button
-		if(stick->GetButton(GAMEPAD::BUTTONS::START) && !startWasPressed) {
+		if(stick->HasButtonChanged(GAMEPAD::BUTTONS::START) && stick->GetButton(GAMEPAD::BUTTONS::START)) {
+			// Start button was pressed
 			if(!hat->IsEnabled()) {
 				hat->Enable();
 				rgb->Set(COLORS::GREEN);
@@ -99,11 +98,8 @@ int main() {
 				rgb->Set(COLORS::RED);
 				std::cout << "Robot is now disabled.\n";
 			}
-			startWasPressed = true;
 		}
-		else if(!stick->GetButton(GAMEPAD::BUTTONS::START) && startWasPressed) {
-			startWasPressed = false;
-		}
+		
 		
 		if(hat->IsEnabled()) {
 			Enabled();
