@@ -52,36 +52,34 @@ bool Joystick::IsOpen() {
 	return fd != -1;
 }
 
-bool Joystick::Update() {
+void Joystick::Update() {
 	if(!IsOpen())
-		return false;
+		return;
 
 	for(uint8_t i = 0; i < btnCount; i++) {
 		lastBtns[i] = btns[i];
 	}
 
 	struct js_event event;
-	if(read(fd, &event, sizeof(event)) > 0) {
-		switch(event.type) {
-			case JS_EVENT_BUTTON:
-				//std::cout << "Button " << +event.number << " event " << event.value << "\n";
-				btns[event.number] = event.value;
-				break;
-			case JS_EVENT_AXIS:
-				//std::cout << "Axis " << +event.number << " event " << event.value << "\n";
-				axes[event.number] = event.value;
-				break;
-			case JS_EVENT_INIT:
-				//std::cout << "Init event\n";
-				break;
-			default:
-				//std::cout << "Other event\n";
-				break;
-		}
-		return true;
+	if(read(fd, &event, sizeof(event)) <= 0)
+		return;
+
+	switch(event.type) {
+		case JS_EVENT_BUTTON:
+			//std::cout << "Button " << +event.number << " event " << event.value << "\n";
+			btns[event.number] = event.value;
+			break;
+		case JS_EVENT_AXIS:
+			//std::cout << "Axis " << +event.number << " event " << event.value << "\n";
+			axes[event.number] = event.value;
+			break;
+		case JS_EVENT_INIT:
+			//std::cout << "Init event\n";
+			break;
+		default:
+			//std::cout << "Other event\n";
+			break;
 	}
-	else
-		return false;
 }
 
 uint8_t Joystick::GetButtonCount() {
