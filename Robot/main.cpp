@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <unistd.h>
+#include <signal.h>
 
 #include "2501/ARGB.h"
 #include "2501/DifferentialDrive.h"
@@ -9,7 +10,26 @@
 #include "2501/SpeedController.h"
 
 
+static ARGB *rgb;
+static bool running = false;
+
+static void ctrl_c_handler(int signum) {
+	(void) (signum);
+	running = false;
+	std::cout << "\nStopped\n";
+}
+
+static void setup_handlers(void) {
+	struct sigaction sa;
+	sa.sa_handler = ctrl_c_handler;
+
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGTERM, &sa, NULL);
+}
+
 int main() {
+	setup_handlers();
+
 	Joystick *stick = new Joystick(0U);
 	if(!stick->IsOpen()) {
 		return -255;
@@ -25,14 +45,15 @@ int main() {
 	drive->SetLeftInverted(true);
 	drive->SetRightInverted(true);
 
-	ARGB *rgb = new ARGB();
+	rgb = new ARGB();
 	rgb->Set(COLORS::BLUE);
 
 
 	bool startWasPressed = false;
 	bool aWasPressed = false;
+	running = true;
 	
-	while(true) {
+	while(running) {
 		// Sleep for 1ms
 		usleep(1000U);
 
