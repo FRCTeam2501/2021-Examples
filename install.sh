@@ -45,3 +45,13 @@ echo -e '\033[1;36m - Building library\033[0m'
 cmake --build .
 echo -e '\033[1;36m - Installing library\033[0m'
 sudo make install
+
+
+# Download and extract WiringPi library
+echo -e '\033[1;36m***** INSTALLING WIRINGPI *****\033[0m'
+cd /tmp
+echo -e '\033[1;36m - Getting library\033[0m'
+wget https://project-downloads.drogon.net/wiringpi-latest.deb
+echo -e '\033[1;36m - Installing library\033[0m'
+sudo dpkg -i wiringpi-latest.deb
+    # Uninstall with `sudo dkpg -r wiringpi`

@@ -49,8 +49,9 @@ void Setup() {
 	drive->SetLeftInverted(true);
 	drive->SetRightInverted(true);
 
-	rgb = new ARGB();
-	rgb->Set(COLORS::BLUE);
+	rgb = new ARGB(9U);
+	rgb->SetAll(COLORS::BLUE);
+	rgb->Render();
 }
 
 void Enabled() {
@@ -90,12 +91,14 @@ int main() {
 			// Start button was pressed
 			if(!hat->IsEnabled()) {
 				hat->Enable();
-				rgb->Set(COLORS::GREEN);
+				rgb->SetAll(COLORS::GREEN);
+				rgb->Render();
 				std::cout << "Robot is now enabled!\n";
 			}
 			else {
 				hat->Disable();
-				rgb->Set(COLORS::RED);
+				rgb->SetAll(COLORS::RED);
+				rgb->Render();
 				std::cout << "Robot is now disabled.\n";
 			}
 		}
