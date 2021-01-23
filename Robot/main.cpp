@@ -3,12 +3,14 @@
 #include <unistd.h>
 #include <signal.h>
 
+#include "wiringPi.h"
+
 #include "2501/ARGB.h"
 #include "2501/DifferentialDrive.h"
 #include "2501/Joystick.h"
 #include "2501/ServoHat.h"
 #include "2501/PWMSpeedController.h"
-//#include "2501/L298N.h"
+#include "2501/L298N.h"
 
 
 static ARGB *rgb;
@@ -32,7 +34,7 @@ static void setup_handlers(void) {
 Joystick *stick;
 ServoHat *hat;
 PWMSpeedController *lf, *lr, *rf, *rr, *shooter;
-//L298N *intake;
+L298N *intake;
 DifferentialDrive *drive;
 
 void Setup() {
@@ -41,20 +43,24 @@ void Setup() {
 		exit(-255);
 	}
 
+	rgb = new ARGB(9U);
+	rgb->SetAll(COLORS::BLUE);
+	rgb->Render();
+
 	hat = new ServoHat();
+
 	lf = new PWMSpeedController(hat, 0U),
 	lr = new PWMSpeedController(hat, 2U),
 	rf = new PWMSpeedController(hat, 1U),
 	rr = new PWMSpeedController(hat, 3U),
 	shooter = new PWMSpeedController(hat, 4U);
-	//intake = new L298N(hat, 5U, 24U, 25U);
+
 	drive = new DifferentialDrive(lf, lr, rf, rr);
 	drive->SetLeftInverted(true);
 	drive->SetRightInverted(true);
 
-	rgb = new ARGB(9U);
-	rgb->SetAll(COLORS::BLUE);
-	rgb->Render();
+	wiringPiSetupGpio();
+	intake = new L298N(hat, 5U, 24U, 25U);
 }
 
 void Enabled() {
@@ -76,21 +82,21 @@ void Enabled() {
 	// Deal with "intake"
 	if(stick->HasButtonChanged(GAMEPAD::BUTTONS::LB)) {
 		if(stick->GetButton(GAMEPAD::BUTTONS::LB)) {
-			//intake->Set(1.0);
+			intake->Set(1.0);
 			std::cout << "Intake: Forward\n";
 		}
 		else {
-			//intake->Set(0.0);
+			intake->Set(0.0);
 			std::cout << "Intake: OFF\n";
 		}
 	}
 	else if(stick->HasButtonChanged(GAMEPAD::BUTTONS::LT)) {
 		if(stick->GetButton(GAMEPAD::BUTTONS::LT)) {
-			//intake->Set(-1.0);
+			intake->Set(-1.0);
 			std::cout << "Intake: Reverse\n";
 		}
 		else {
-			//intake->Set(0.0);
+			intake->Set(0.0);
 			std::cout << "Intake: OFF\n";
 		}
 	}

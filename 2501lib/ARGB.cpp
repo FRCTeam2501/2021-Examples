@@ -3,7 +3,7 @@
 #include "ARGB.h"
 
 
-ARGB::ARGB(uint8_t ledCount) {
+ARGB::ARGB(int32_t ledCount) {
 	ARGB::ledCount = ledCount;
 	
 	ledString.freq = WS2811_TARGET_FREQ;
@@ -37,7 +37,7 @@ ARGB::~ARGB() {
 }
 
 void ARGB::SetAll(ws2811_led_t color) {
-	for (int x = 0; x < ledCount; x++) {
+	for (uint8_t x = 0; x < ledCount; x++) {
 		ledString.channel[0].leds[x] = color;
 	}
 }

@@ -23,17 +23,17 @@ L298N::L298N(ServoHat &hat, uint8_t channel, uint8_t in1, uint8_t in2) {
 void L298N::Set(double speed) {
 	if(speed > 0) {
 		o1->Set(true);
-		o1->Set(false);
+		o2->Set(false);
 		pwm->SetPercent(speed);
 	}
 	else if(speed < 0) {
 		o1->Set(false);
-		o1->Set(true);
+		o2->Set(true);
 		pwm->SetPercent(abs(speed));
 	}
 	else {
 		o1->Set(true);
-		o1->Set(false);
+		o2->Set(false);
 		pwm->SetPercent(speed);
 	}
 }

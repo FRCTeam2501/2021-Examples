@@ -34,7 +34,7 @@ namespace COLORS {
 class ARGB {
  private:
 	// Count of LEDs on the string
-	uint8_t ledCount;
+	int32_t ledCount;
 
 	// Library object to use the LEDs
 	ws2811_t ledString;
@@ -43,7 +43,7 @@ class ARGB {
 	/**
 	 * @brief Construct a new ARGB object
 	 */
-	ARGB(uint8_t ledCount);
+	ARGB(int32_t ledCount);
 
 	/**
 	 * @brief Destroy the ARGB object

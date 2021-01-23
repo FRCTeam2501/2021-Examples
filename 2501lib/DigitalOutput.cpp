@@ -3,7 +3,7 @@
 
 
 DigitalOutput::DigitalOutput(uint8_t pin) {
-	wiringPiSetupGpio(); // Library looks like it has no problem being init'd multiple times.
+	//wiringPiSetupGpio(); // Library looks like it has no problem being init'd multiple times.
 
 	DigitalOutput::pin = pin;
 	pinMode(pin, OUTPUT);
