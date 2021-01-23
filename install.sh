@@ -40,7 +40,7 @@ cd rpi_ws281x
 mkdir build
 cd build
 echo -e '\033[1;36m - Configuring library\033[0m'
-cmake -D BUILD_SHARED=OFF -D BUILD_TEST=ON ..
+cmake -D BUILD_SHARED=OFF -D BUILD_TEST=OFF ..
 echo -e '\033[1;36m - Building library\033[0m'
 cmake --build .
 echo -e '\033[1;36m - Installing library\033[0m'
