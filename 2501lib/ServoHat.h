@@ -1,47 +1,36 @@
 #pragma once
 
-#include "pca9685servo.h"
+#include "pca9685.h"
 
 
-class SpeedController; // Class prototype
+class PWM; // Class prototype
 
 
 class ServoHat {
  private:
 	// Lower level object to talk with the servo controller
-	PCA9685Servo *hat;
-	// Array to store the angles of the servos
-	uint8_t *angles;
+	PCA9685 *hat;
+	// Array to store the values of the servos
+	uint16_t *values;
 	// If the hat is enabled
 	bool enabled = false;
 
-	// Internal function to convert a double to an angle
-	uint8_t DoubleToAngle(double d);
-
-	// Internal function to set a channel to an angle
-	void SetInternal(uint8_t channel, uint8_t angle, bool record);
+	// Internal function to set a channel to an internal value
+	void SetInternal(uint8_t channel, uint16_t value, bool record);
 
  protected:
-	// Allow SpeedControllers to access the channels
-	friend class SpeedController;
+	// Allow PWM to access the channels
+	friend class PWM;
 	// We have a max of 16 channels
 	const static uint8_t MAX_CHANNELS = 16;
 
 	/**
-	 * @brief Set a channel to a speed
-	 * 
+	 * @brief Set the Raw value
+	 *
 	 * @param channel Channel to set
-	 * @param speed Speed to set to
+	 * @param value Value to set channel to
 	 */
-	void Set(uint8_t channel, double speed);
-
-	/**
-	 * @brief Set a channel to an angle
-	 * 
-	 * @param channel Channel to set
-	 * @param angle Angle to set to
-	 */
-	void SetAngle(uint8_t channel, uint8_t angle);
+	void SetRaw(uint8_t channel, uint16_t value);
 
  public:
 	/**
@@ -61,7 +50,7 @@ class ServoHat {
 
 	/**
 	 * @brief Check if the Servo Hat is Enabled
-	 * 
+	 *
 	 * @return true if enabled, false if disabled
 	 */
 	bool IsEnabled();

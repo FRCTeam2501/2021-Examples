@@ -7,7 +7,8 @@
 #include "2501/DifferentialDrive.h"
 #include "2501/Joystick.h"
 #include "2501/ServoHat.h"
-#include "2501/SpeedController.h"
+#include "2501/PWMSpeedController.h"
+//#include "2501/L298N.h"
 
 
 static ARGB *rgb;
@@ -30,7 +31,8 @@ static void setup_handlers(void) {
 
 Joystick *stick;
 ServoHat *hat;
-SpeedController *lf, *lr, *rf, *rr, *shooter;
+PWMSpeedController *lf, *lr, *rf, *rr, *shooter;
+//L298N *intake;
 DifferentialDrive *drive;
 
 void Setup() {
@@ -40,11 +42,12 @@ void Setup() {
 	}
 
 	hat = new ServoHat();
-	lf = new SpeedController(hat, 0U),
-	lr = new SpeedController(hat, 2U),
-	rf = new SpeedController(hat, 1U),
-	rr = new SpeedController(hat, 3U),
-	shooter = new SpeedController(hat, 4U);
+	lf = new PWMSpeedController(hat, 0U),
+	lr = new PWMSpeedController(hat, 2U),
+	rf = new PWMSpeedController(hat, 1U),
+	rr = new PWMSpeedController(hat, 3U),
+	shooter = new PWMSpeedController(hat, 4U);
+	//intake = new L298N(hat, 5U, 24U, 25U);
 	drive = new DifferentialDrive(lf, lr, rf, rr);
 	drive->SetLeftInverted(true);
 	drive->SetRightInverted(true);
@@ -67,6 +70,28 @@ void Enabled() {
 		else {
 			shooter->Set(0.0);
 			std::cout << "Shooter: OFF\n";
+		}
+	}
+
+	// Deal with "intake"
+	if(stick->HasButtonChanged(GAMEPAD::BUTTONS::LB)) {
+		if(stick->GetButton(GAMEPAD::BUTTONS::LB)) {
+			//intake->Set(1.0);
+			std::cout << "Intake: Forward\n";
+		}
+		else {
+			//intake->Set(0.0);
+			std::cout << "Intake: OFF\n";
+		}
+	}
+	else if(stick->HasButtonChanged(GAMEPAD::BUTTONS::LT)) {
+		if(stick->GetButton(GAMEPAD::BUTTONS::LT)) {
+			//intake->Set(-1.0);
+			std::cout << "Intake: Reverse\n";
+		}
+		else {
+			//intake->Set(0.0);
+			std::cout << "Intake: OFF\n";
 		}
 	}
 }
