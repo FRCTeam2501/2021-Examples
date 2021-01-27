@@ -6,3 +6,4 @@ You will want to use the Raspberry Pi OS (32-bit) image for your pi.
 4. [Download 2501lib & install]
 5. Next, you will want to follow this blog post on how to install visual studio code on your Pi.https://pimylifeup.com/raspberry-pi-visual-studio-code/
      - Instead of installing via double click, need to do `sudo apt install ~/Downloads/[tab]`
+6. [update OS via apt]
