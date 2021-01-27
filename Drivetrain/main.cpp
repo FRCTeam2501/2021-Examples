@@ -10,6 +10,7 @@
 #include "2501/Joystick.h"
 #include "2501/ServoHat.h"
 #include "2501/PWMSpeedController.h"
+#include "2501/Version.h"
 
 
 static ARGB *rgb;
@@ -67,6 +68,8 @@ int main() {
 	setup_handlers();
 
 	Setup();
+
+	std::cout << "Booted with version " << lib_2501::VERSION << "\n";
 	
 	while(running) {
 		// Sleep for 1ms
