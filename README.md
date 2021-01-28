@@ -20,8 +20,7 @@ Don't be concerned if nothing shows up when you try to detect I2C devices becaus
 
 ## 4. Installing VS Code
 
-Next, you will want to follow this blog post on how to install visual studio code on your Pi: https://pimylifeup.com/raspberry-pi-visual-studio-code/
-     - Instead of installing via double click, need to do `sudo apt install ~/Downloads/[tab]`
+You will want to follow this blog post on how to install visual studio code on your Pi: https://pimylifeup.com/raspberry-pi-visual-studio-code/
 
 
 5. Update OS
