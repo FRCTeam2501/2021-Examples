@@ -15,7 +15,12 @@ Don't be concerned if nothing shows up when you try to detect I2C devices becaus
 
 ## 3. Installing 2501lib and the required libraryes
 
-[Download 2501lib & install]
+To install the 2501 library (and the required libraries it uses), I've created a simple install script for you.  Open up a terminal and type the following command to download the library and install script from my GitHub:
+`git clone https://github.com/TylerSeiford/2501lib.git`
+Once that is done, run the following command to enter the cloned GitHub repository:
+`cd 2501lib`
+Then run the following command and everything should install itself:
+`./install.sh`
 
 
 ## 4. Installing VS Code
@@ -25,4 +30,7 @@ You will want to follow this blog post on how to install visual studio code on y
 
 5. Update OS
 
-[update OS via apt]
+To get all updates to installed packages, run the following commands in terminal:
+`sudo apt update` (This updates your pi's list of available packages and their latest versions)
+`sudo apt upgrade` (This will download and install the latest versions of the installed packages)
+The second command will ask you to confirm if you want to install the updates, just type a y letter and then press enter.
