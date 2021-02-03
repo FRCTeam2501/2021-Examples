@@ -40,6 +40,11 @@ To get all updates to installed packages, run the following commands in terminal
 The second command will ask you to confirm if you want to install the updates, just type a y letter and then press enter to do so.
 
 
+# This is as far as you need to get for right now.
+If you want to access your Pi without using a monitor/keyboard/mouse, I recommend trying setting up SSH, RDP or VNC.
+Apparently you can setup a static IP using the following tutorial, but this is untested: https://www.raspberrypi.org/documentation/configuration/tcpip/
+
+
 ## 6. Enabling remote terminal access
 
 Using a separate keyboard, mouse, and monitor can be a pain to always accessing your Pi, and would be very difficult once you have your Pi on your robot.  A simple and secure method to remotely access your Pi is to enable SSH.  Raspberry Pi Foundation has a good tutorial on this which can be found here: https://www.raspberrypi.org/documentation/remote-access/ssh/
