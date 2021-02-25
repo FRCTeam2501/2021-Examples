@@ -6,10 +6,10 @@
 DrivetrainExampleRobot::DrivetrainExampleRobot(Joystick *stick, ServoHat *hat) : RobotBase(stick, hat, 10000U) {
 	rgb = new ARGB(9U);
 
-	lf = new PWMSpeedController(hat, 0U),
-	lr = new PWMSpeedController(hat, 2U),
-	rf = new PWMSpeedController(hat, 1U),
-	rr = new PWMSpeedController(hat, 3U),
+	lf = new PWMSpeedController(hat, 0U);
+	lr = new PWMSpeedController(hat, 2U);
+	rf = new PWMSpeedController(hat, 1U);
+	rr = new PWMSpeedController(hat, 3U);
 
 	drive = new DifferentialDrive(lf, lr, rf, rr);
 }
