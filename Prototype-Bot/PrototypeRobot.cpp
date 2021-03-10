@@ -5,7 +5,7 @@
 #include "wiringPi.h"
 
 
-PrototypeRobot::PrototypeRobot(Joystick *stick, ServoHat *hat) : RobotBase(stick, hat, 10000U) {
+PrototypeRobot::PrototypeRobot(Joystick *stick, ServoHat *hat) : RobotBase(stick, hat, GAMEPAD::BUTTONS::START, GAMEPAD::BUTTONS::SELECT, 10000U) {
 	rgb = new ARGB(9U);
 
 	lf = new PWMSpeedController(hat, 0U),
@@ -31,7 +31,7 @@ void PrototypeRobot::Shutdown() {
 }
 
 void PrototypeRobot::RobotInit() {
-	rgb->SetAll(COLORS::BLUE);
+	rgb->SetAll(COLORS::WHITE);
 	rgb->Render();
 
 	drive->SetLeftInverted(true);
@@ -45,7 +45,7 @@ void PrototypeRobot::RobotPeriodic() {
 void PrototypeRobot::TeleopInit() {
 	rgb->SetAll(COLORS::GREEN);
 	rgb->Render();
-	std::cout << "Robot is now enabled!\n";
+	std::cout << "Teleop is now enabled!\n";
 }
 
 void PrototypeRobot::TeleopPeriodic() {
@@ -84,7 +84,16 @@ void PrototypeRobot::TeleopPeriodic() {
 			intake->Set(0.0);
 			std::cout << "Intake: OFF\n";
 		}
-	}}
+	}
+}
+
+void PrototypeRobot::AutonomousInit() {
+	rgb->SetAll(COLORS::BLUE);
+	rgb->Render();
+	std::cout << "Auto is now enabled!\n";
+}
+
+void PrototypeRobot::AutonomousPeriodic() {}
 
 void PrototypeRobot::DisabledInit() {
 	rgb->SetAll(COLORS::RED);
