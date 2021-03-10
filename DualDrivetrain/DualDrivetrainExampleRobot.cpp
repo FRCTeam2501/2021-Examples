@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-DualDrivetrainExampleRobot::DualDrivetrainExampleRobot(Joystick *stick, ServoHat *hat) : RobotBase(stick, hat, 10000U) {
+DualDrivetrainExampleRobot::DualDrivetrainExampleRobot(Joystick *stick, ServoHat *hat) : RobotBase(stick, hat, GAMEPAD::BUTTONS::START, GAMEPAD::BUTTONS::SELECT, 10000U) {
 	rgb = new ARGB(9U);
 
 	l = new PWMSpeedController(hat, 0U);
@@ -24,7 +24,7 @@ void DualDrivetrainExampleRobot::Shutdown() {
 }
 
 void DualDrivetrainExampleRobot::RobotInit() {
-	rgb->SetAll(COLORS::BLUE);
+	rgb->SetAll(COLORS::WHITE);
 	rgb->Render();
 
 	drive->SetLeftInverted(true);
@@ -38,12 +38,20 @@ void DualDrivetrainExampleRobot::RobotPeriodic() {
 void DualDrivetrainExampleRobot::TeleopInit() {
 	rgb->SetAll(COLORS::GREEN);
 	rgb->Render();
-	std::cout << "Robot is now enabled!\n";
+	std::cout << "Teleop is now enabled!\n";
 }
 
 void DualDrivetrainExampleRobot::TeleopPeriodic() {
 	drive->ArcadeDrive(stick->GetAxis(GAMEPAD::AXES::LY), stick->GetAxis(GAMEPAD::AXES::LX) * -1.0);
 }
+
+void DualDrivetrainExampleRobot::AutonomousInit() {
+	rgb->SetAll(COLORS::BLUE);
+	rgb->Render();
+	std::cout << "Auto is now enabled!\n";
+}
+
+void DualDrivetrainExampleRobot::AutonomousPeriodic() {}
 
 void DualDrivetrainExampleRobot::DisabledInit() {
 	rgb->SetAll(COLORS::RED);
