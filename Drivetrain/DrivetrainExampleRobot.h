@@ -22,6 +22,9 @@ class DrivetrainExampleRobot : public RobotBase {
 	void TeleopInit() override;
 	void TeleopPeriodic() override;
 
+	void AutonomousInit() override;
+	void AutonomousPeriodic() override;
+
 	void DisabledInit() override;
 	void DisabledPeriodic() override;
 };
