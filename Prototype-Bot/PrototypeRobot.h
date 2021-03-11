@@ -13,6 +13,8 @@ class PrototypeRobot : public RobotBase {
 	DifferentialDrive *drive;
 	ARGB *rgb;
 
+	uint16_t autoCycles;
+
  public:
 	PrototypeRobot(Joystick *stick, ServoHat *hat);
 

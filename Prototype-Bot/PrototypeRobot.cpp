@@ -1,6 +1,7 @@
 #include "PrototypeRobot.h"
 
 #include <iostream>
+#include <chrono>
 
 #include "wiringPi.h"
 
@@ -8,10 +9,10 @@
 PrototypeRobot::PrototypeRobot(Joystick *stick, ServoHat *hat) : RobotBase(stick, hat, GAMEPAD::BUTTONS::START, GAMEPAD::BUTTONS::SELECT, 10000U) {
 	rgb = new ARGB(9U);
 
-	lf = new PWMSpeedController(hat, 0U),
-	lr = new PWMSpeedController(hat, 2U),
-	rf = new PWMSpeedController(hat, 1U),
-	rr = new PWMSpeedController(hat, 3U),
+	lf = new PWMSpeedController(hat, 0U);
+	lr = new PWMSpeedController(hat, 2U);
+	rf = new PWMSpeedController(hat, 1U);
+	rr = new PWMSpeedController(hat, 3U);
 
 	drive = new DifferentialDrive(lf, lr, rf, rr);
 
@@ -94,10 +95,34 @@ void PrototypeRobot::TeleopPeriodic() {
 void PrototypeRobot::AutonomousInit() {
 	rgb->SetAll(COLORS::BLUE);
 	rgb->Render();
+
 	std::cout << "Auto is now enabled!\n";
+
+	autoCycles = 0;
 }
 
-void PrototypeRobot::AutonomousPeriodic() {}
+void PrototypeRobot::AutonomousPeriodic() {
+	if(autoCycles == 0) {
+		// For the first cycle in auto, start moving
+		std::cout << "[Auto]\t" << "Started driving.\n";
+		drive->ArcadeDrive(-0.5, 0.0);
+	}
+	else if(autoCycles == 150) {
+		// For the 150th cycle in auto, stop moving
+
+		/**
+		 * Since we told RobotBase that we want each loop to be 10,000us or 10ms, the robot will run at 100 loops per second.
+		 * Therefore the 150th loop will be at 1.5 seconds into auto.
+		 */
+
+		drive->ArcadeDrive(0.0, 0.0);
+		std::cout << "[Auto]\t" << "Stopped driving.\n";
+	}
+
+
+	// Increment our counter of how many cycles have happened in auto
+	autoCycles++;
+}
 
 void PrototypeRobot::DisabledInit() {
 	rgb->SetAll(COLORS::RED);
