@@ -15,6 +15,8 @@ PrototypeRobot::PrototypeRobot(Joystick *stick, ServoHat *hat) : RobotBase(stick
 
 	drive = new DifferentialDrive(lf, lr, rf, rr);
 
+	shooter = new PWMSpeedController(hat, 6U);
+
 	wiringPiSetupGpio();
 	intake = new L298N(hat, 5U, 24U, 25U);
 }
@@ -28,6 +30,8 @@ void PrototypeRobot::Shutdown() {
 	//delete rr;
 
 	//delete drive;
+
+	//delete shooter;
 }
 
 void PrototypeRobot::RobotInit() {
