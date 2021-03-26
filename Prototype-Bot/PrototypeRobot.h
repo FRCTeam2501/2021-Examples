@@ -4,12 +4,14 @@
 #include "2501/DifferentialDrive.h"
 #include "2501/PWMSpeedController.h"
 #include "2501/L298N.h"
+#include "2501/Servo.h"
 
 
 class PrototypeRobot : public RobotBase {
  private:
 	PWMSpeedController *lf, *lr, *rf, *rr, *shooter;
 	L298N *intake;
+	Servo *hoodAdjust;
 	DifferentialDrive *drive;
 	ARGB *rgb;
 

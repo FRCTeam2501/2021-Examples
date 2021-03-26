@@ -17,6 +17,7 @@ PrototypeRobot::PrototypeRobot(Joystick *stick, ServoHat *hat) : RobotBase(stick
 	drive = new DifferentialDrive(lf, lr, rf, rr);
 
 	shooter = new PWMSpeedController(hat, 6U);
+	hoodAdjust = new Servo(hat, 7U);
 
 	wiringPiSetupGpio();
 	intake = new L298N(hat, 5U, 24U, 25U);
@@ -33,6 +34,7 @@ void PrototypeRobot::Shutdown() {
 	//delete drive;
 
 	//delete shooter;
+	//delete hoodAdjust;
 }
 
 void PrototypeRobot::RobotInit() {
@@ -66,6 +68,32 @@ void PrototypeRobot::TeleopPeriodic() {
 		else {
 			shooter->Set(0.0);
 			std::cout << "Shooter: OFF\n";
+		}
+	}
+
+	//Deal with shooter hood adjust
+	if(stick->HasButtonChanged(GAMEPAD::BUTTONS::RT)) {
+		if(stick->GetButton(GAMEPAD::BUTTONS::RT)) {
+			uint8_t angle = hoodAdjust->GetAngle();
+			if(angle >= 175)
+				angle = 180;
+			else
+				angle += 5;
+
+			hoodAdjust->SetAngle(angle);
+			std::cout << "Hood is now at: " << +angle << "\n";
+		}
+	}
+	else if(stick->HasButtonChanged(GAMEPAD::BUTTONS::RB)) {
+		if(stick->GetButton(GAMEPAD::BUTTONS::RB)) {
+			uint8_t angle = hoodAdjust->GetAngle();
+			if(angle <= 5)
+				angle = 0;
+			else
+				angle -= 5;
+
+			hoodAdjust->SetAngle(angle);
+			std::cout << "Hood is now at: " << +angle << "\n";
 		}
 	}
 
